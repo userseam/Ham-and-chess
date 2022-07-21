@@ -1,5 +1,7 @@
 import gspread
 from google.oauth2.service_account import Credentials
+from pprint import pprint
+
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -55,13 +57,23 @@ def validate_data(values):
 
 def update_sales_worksheet(data):
     """
-    This is going to be used to update the worksheet with adding a new row with the list data provided 
+    This is going to be used to update the worksheet 
+    with adding a new row with the list data provided 
     """
     print("Uppdating sales worhsheet ... \n")
     sales_worksheet = SHEET.worksheet("sales")
     sales_worksheet.append_row(data)
     print("Sales worksheet update sucsefull")
 
+def calculate_surplus_data(sales_row):
+    """
+    This is used to check wheter if there is a surplus of products or if any should be discarded
+    """
+    print("Calculating suprplus data... \n")
+    stock = SHEET.worksheet("stock").get_all_values()
+    
+    stock_row = stock[-1]
+    print(stock_row)
 
 
 def main():
@@ -71,6 +83,9 @@ def main():
     data = get_sales_data()
     sales_data = [int(num) for num in data]
     update_sales_worksheet(sales_data)
+    calculate_surplus_data(sales_data)
+
+    
 
 
 print("welcome to the ham and cheese factoru automation")
